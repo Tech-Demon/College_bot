@@ -1,10 +1,16 @@
-from sqlalchemy import create_engine, MetaData, inspect
+from sqlalchemy import create_engine, MetaData, inspect, text
 from langchain.docstore.document import Document
-import config as config
+import config
+import pymysql
 
 class CollegeDatabaseLoader:
     def __init__(self, db_url=config.DATABASE_URL):
-        self.engine = create_engine(db_url)
+        # Create engine with appropriate settings for MySQL
+        self.engine = create_engine(
+            db_url, 
+            pool_recycle=3600,  # Prevent connection timeouts
+            pool_pre_ping=True  # Verify connections before using
+        )
         self.metadata = MetaData()
         self.inspector = inspect(self.engine)
         
@@ -30,7 +36,25 @@ class CollegeDatabaseLoader:
         """Execute SQL query and return results."""
         try:
             with self.engine.connect() as conn:
-                result = conn.execute(query)
-                return result.fetchall()
+                # Use parameterized query to prevent SQL injection
+                result = conn.execute(text(query))
+                rows = result.fetchall()
+                if not rows:
+                    return "Query executed successfully. No results returned."
+                    
+                # Convert to list of dictionaries for easier processing
+                column_names = result.keys()
+                results = [dict(zip(column_names, row)) for row in rows]
+                return results
+                
         except Exception as e:
             return f"Error executing query: {e}"
+    
+    def test_connection(self):
+        """Test if the database connection is working."""
+        try:
+            with self.engine.connect() as conn:
+                conn.execute(text("SELECT 1"))
+                return True
+        except Exception as e:
+            return f"Connection error: {e}"
