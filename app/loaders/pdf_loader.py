@@ -2,7 +2,7 @@ import os
 from glob import glob
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-import config as config
+import config as config 
 
 class CollegePDFLoader:
     def __init__(self, pdf_dir=config.PDF_DIRECTORY):

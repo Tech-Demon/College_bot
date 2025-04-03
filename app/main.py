@@ -3,8 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 import os
-import config
-
+import config as config 
 from loaders.web_loader import CollegeWebsiteLoader
 from loaders.pdf_loader import CollegePDFLoader
 from loaders.db_loader import CollegeDatabaseLoader
@@ -128,4 +127,4 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app.main:app", host=config.API_HOST, port=config.API_PORT, reload=True)
+    uvicorn.run("main:app", host=config.API_HOST, port=config.API_PORT, reload=True)

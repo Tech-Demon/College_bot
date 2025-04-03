@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from typing import List
-import config as config
+import config as config 
 
 class CollegeWebsiteLoader:
     def __init__(self, base_url=config.WEBSITE_URL):

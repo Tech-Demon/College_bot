@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, MetaData, inspect, text
 from langchain.docstore.document import Document
-import config
+import config as config
 import pymysql
 
 class CollegeDatabaseLoader:
